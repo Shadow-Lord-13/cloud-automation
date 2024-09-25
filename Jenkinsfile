@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone Git Repository') {
             steps {
-                git 'https://github.com/username/simple-cicd-pipeline.git'
+                git 'https://github.com/Shadow-Lord-13/cloud-automation.git'
             }
         }
         stage('Build Docker Image') {
