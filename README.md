@@ -1,0 +1,1 @@
+This project demonstates the how to use terraform, docker, Jenkins, AWS to set a autoated pipeline to run an python app.
