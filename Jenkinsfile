@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Clone Git Repository') {
             steps {
@@ -12,7 +12,21 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("python-app:${env.BUILD_ID}")
+                    // Use your Docker Hub username
+                    dockerImage = docker.build("shadowlord13/python-app:${env.BUILD_ID}")
+                }
+            }
+        }
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    // Docker Hub repository name
+                    def dockerHubRepo = "shadowlord13/python-app"
+
+                    // Push the image to Docker Hub
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-credentials-id') {
+                        dockerImage.push("${env.BUILD_ID}")
+                    }
                 }
             }
         }
@@ -21,11 +35,17 @@ pipeline {
                 script {
                     sshagent(['ec2-ssh-credentials']) {
                         sh '''
+                        #!/bin/bash
+                        set -e  # Exit on error
+                        set -x  # Enable debug output
                         ssh -o StrictHostKeyChecking=no ubuntu@54.89.206.158 <<EOF
+                        # Stop and remove the existing container if it exists
                         docker stop python-app || true
                         docker rm python-app || true
-                        docker pull python-app:${env.BUILD_ID}
-                        docker run -d -p 5000:5000 --name python-app python-app:${env.BUILD_ID}
+                        # Pull the latest image from Docker Hub
+                        docker pull shadowlord13/python-app:${BUILD_ID}
+                        # Run the new container
+                        docker run -d -p 5000:5000 --name python-app shadowlord13/python-app:${BUILD_ID}
                         EOF
                         '''
                     }
