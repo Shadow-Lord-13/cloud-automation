@@ -39,14 +39,23 @@ pipeline {
                         set -e  # Exit on error
                         set -x  # Enable debug output
                         ssh -o StrictHostKeyChecking=no ubuntu@54.89.206.158 <<EOF
-                        # Stop and remove the existing container if it exists
+
+                        # Add user to Docker group if not already done
+                        #sudo usermod -aG docker ubuntu
+
+                        # Update permission
+                        sudo chmod 666 /var/run/docker.sock
+                        # Ensure Docker service is running
+                        sudo systemctl start docker
+
+                        # Stop and remove existing container if any
                         docker stop python-app || true
                         docker rm python-app || true
+                        
                         # Pull the latest image from Docker Hub
                         docker pull shadowlord13/python-app:${BUILD_ID}
                         # Run the new container
                         docker run -d -p 5000:5000 --name python-app shadowlord13/python-app:${BUILD_ID}
-                        EOF
                         '''
                     }
                 }

@@ -86,4 +86,4 @@ ubuntu@ip-172-31-93-174:~$ sudo systemctl restart jenkins
 
 - Install ssh Agent plugin in jenkins.
 
-- 
+- docker logs <container-id>
