@@ -1,10 +1,11 @@
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_key_pair" "ssh_key_pair" {
-  key_name   = "ssh-key-pair-ubun"
-  public_key = file("~/.ssh/id_rsa.pub")
+resource "aws_key_pair" "jenkins_pub_ubun" {
+  key_name   = "jenkins-pub-ubun"
+  public_key = file("~/.ssh/id_rsa.pub")  # Replace with the path to your public key file
 }
 
 # ssh -i ~/.ssh/id_rsa ubuntu@
@@ -21,18 +22,10 @@ resource "aws_security_group" "terra_jenkins_sg" {
   }
 
   ingress {
-    description = "Allow access through port 8080 into instance"
-    from_port = 8080
-    to_port = 8080
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "Allow access through port 5000 into instance"
-    from_port = 5000
-    to_port = 5000
-    protocol = "tcp"
+    description = "Allow access through all port into instance"
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -52,10 +45,8 @@ resource "aws_security_group" "terra_jenkins_sg" {
 resource "aws_instance" "jenkins_instance" {
   ami                     = "ami-0e86e20dae9224db8"
   instance_type           = "t2.micro"
-  key_name                = aws_key_pair.ssh_key_pair.key_name
+  key_name                = aws_key_pair.jenkins_pub_ubun.key_name
   vpc_security_group_ids  = [aws_security_group.terra_jenkins_sg.id]
-  #user_data = base64encode(file("userdata.sh"))
-
   tags = {
     Name = "jenkins-instance"
   }
