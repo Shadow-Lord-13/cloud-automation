@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Clone Git Repository') {
             steps {
-                git 'https://github.com/Shadow-Lord-13/cloud-automation.git'
+                retry(3) {
+                    git branch: 'main', url: 'https://github.com/Shadow-Lord-13/cloud-automation.git'
+                }
             }
         }
         stage('Build Docker Image') {
