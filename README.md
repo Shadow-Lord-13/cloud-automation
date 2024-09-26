@@ -86,4 +86,12 @@ ubuntu@ip-172-31-93-174:~$ sudo systemctl restart jenkins
 
 - Install ssh Agent plugin in jenkins.
 
+Add credintils for ssh (shh private key content)
+- 'ec2-ssh-credentials'
+
+Add credintils for docker hub
+- 'docker-credentials-id'
+ - user name
+ - password
+
 - docker logs <container-id>
