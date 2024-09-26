@@ -21,7 +21,7 @@ pipeline {
                 script {
                     sshagent(['ec2-ssh-credentials']) {
                         sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@54.89.206.158 <<EOF
+                        ssh -o StrictHostKeyChecking=no ubuntu@54.89.206.158 <<EOF
                         docker stop python-app || true
                         docker rm python-app || true
                         docker pull python-app:${env.BUILD_ID}

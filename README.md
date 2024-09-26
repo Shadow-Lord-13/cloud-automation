@@ -82,3 +82,8 @@ Ctrl + X.
 
 ubuntu@ip-172-31-93-174:~$ sudo systemctl daemon-reload
 ubuntu@ip-172-31-93-174:~$ sudo systemctl restart jenkins
+
+
+- Install ssh Agent plugin in jenkins.
+
+- 
